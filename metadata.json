@@ -1,0 +1,6 @@
+{
+  "name": "Landscape & Garden Design Engineer",
+  "description": "An interactive smart landscape design and lawn estimation assistant. Select and analyze garden layouts, calculate soil volume, grass plug density, fencing requirements, and receive custom landscape design plans powered by Gemini.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
