@@ -20,29 +20,26 @@ jobs:
 
       - name: Install Gradle and Build
         run: |
-          # 1. تثبيت Gradle 8.9 (متوافق مع Plugin 8.7.0)
+          # 1. تحميل وتثبيت Gradle 8.9
           echo "Installing Gradle 8.9..."
           wget -q https://services.gradle.org/distributions/gradle-8.9-bin.zip
           unzip -q gradle-8.9-bin.zip
           GRADLE_BIN=$(pwd)/gradle-8.9/bin/gradle
           
-          # 2. البحث عن مجلد المشروع
+          # 2. تحديد مسار المشروع
           BUILD_FILE=$(find . -name "build.gradle*" | head -n 1)
           PROJECT_DIR=$(dirname "$BUILD_FILE")
-          cd "$PROJECT_DIR"
           
-          # 3. فرض إعدادات AndroidX (تجاهل ما هو موجود مسبقاً)
+          # 3. معالجة التضارب في المراجع (إصلاح JitPack 401)
+          # نقوم بتغيير الإصدار المسبب للمشكلة 1.0.10 إلى الإصدار المستقر 0.10.0
+          sed -i 's|io.github.sceneview:ar:1.0.10|io.github.sceneview:ar:0.10.0|g' "$BUILD_FILE"
+          
+          # 4. إجبار إعدادات AndroidX (تجاوز ملف gradle.properties)
+          cd "$PROJECT_DIR"
           echo "android.useAndroidX=true" > gradle.properties
           echo "android.enableJetifier=true" >> gradle.properties
           
-          # 4. إصلاح الـ Manifest إذا وجد
-          MANIFEST_PATH="app/src/main/AndroidManifest.xml"
-          if [ -f "$MANIFEST_PATH" ]; then
-            sed -i 's|android:icon="@mipmap/ic_launcher"|android:icon="@android:drawable/sym_def_app_icon"|g' "$MANIFEST_PATH"
-            sed -i 's|<manifest |<manifest xmlns:tools="http://schemas.android.com/tools" |g' "$MANIFEST_PATH"
-          fi
-          
-          # 5. تنفيذ البناء (تفعيل Jetifier وإجبار AndroidX)
+          # 5. تنظيف وتنفيذ البناء
           $GRADLE_BIN clean assembleDebug \
             -Dorg.gradle.jvmargs="-Xmx4g -XX:MaxMetaspaceSize=1g" \
             -Pandroid.useAndroidX=true \
