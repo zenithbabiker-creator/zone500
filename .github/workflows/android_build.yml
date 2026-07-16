@@ -22,18 +22,18 @@ jobs:
         java-version: '17'
         cache: 'gradle'
 
-    - name: Download and Setup Gradle 8.7
+    - name: Download and Setup Gradle 8.9
       run: |
-        wget -q https://services.gradle.org/distributions/gradle-8.7-bin.zip
-        unzip -q gradle-8.7-bin.zip
-        export PATH=$PATH:$(pwd)/gradle-8.7/bin
-        echo "GRADLE_HOME=$(pwd)/gradle-8.7" >> $GITHUB_ENV
-        echo "$(pwd)/gradle-8.7/bin" >> $GITHUB_PATH
+        wget -q https://services.gradle.org/distributions/gradle-8.9-bin.zip
+        unzip -q gradle-8.9-bin.zip
+        export PATH=$PATH:$(pwd)/gradle-8.9/bin
+        echo "GRADLE_HOME=$(pwd)/gradle-8.9" >> $GITHUB_ENV
+        echo "$(pwd)/gradle-8.9/bin" >> $GITHUB_PATH
 
     - name: Verify Gradle Installation
       run: gradle --version
 
-    - name: Build Android App with Gradle 8.7
+    - name: Build Android App with Gradle 8.9
       run: |
         cd android
         gradle assembleDebug --no-daemon
